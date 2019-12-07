@@ -1,0 +1,35 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+
+getwd()
+a <- "PVD"
+paste("CellMarkers_NeuronsOnly-", a, ".csv", sep = "")
+
+PVD <- read.table("CellMarkers_NeuronsOnly-PVD.csv", sep = ",", stringsAsFactors = FALSE, header = TRUE)
+
+TF <- read.table("TF_list_from_Walhout.csv", sep = ",", stringsAsFactors = FALSE, header = TRUE)
+
+library(dplyr)
+
+overlap <- intersect(PVD$gene_name, TF$Gene.name)
+overlap
+
+PVD_TF <- filter(PVD, gene_name %in% overlap)
+PVD_TF <- PVD_TF[order(PVD_TF$gene_name),]
+
+TF_PVD <- filter(TF, Gene.name %in% overlap)
+TF_PVD <- TF_PVD[order(TF_PVD$Gene.name),]
+
+PVD_TF # sequencing data
+TF_PVD # TF classification
+
+write.table(cbind(PVD_TF, TF_PVD), "PVD_TF.csv", sep = ",", row.names = FALSE, quote = FALSE)
+
+
+
+```
+
